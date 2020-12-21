@@ -3,45 +3,43 @@
 </template>
 
 <script>
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 export default {
-  name: 'Im',
-  data(){
-    return{
-      socket:null
-    }
+  name: "Im",
+  data() {
+    return {
+      socket: null,
+    };
   },
   props: {
-    msg: String
+    msg: String,
   },
-  methods:{
-    sendMessage(){
-     console.log(this.socket)
-     this.socket.emit('/v1/im/new-message', '第一条消息');
-      console.log('发送成功')
-    }
+  methods: {
+    sendMessage() {
+      this.socket.emit("chat", 'hello world!');
+      this.socket.emit("/", 'hello world!');
+    },
+    initSocket() {
+      this.socket = io("http://127.0.0.1:7001/", {
+        query: {
+          auth: "tokens",
+        },
+      });
+      console.log(this.socket)
+      this.socket.on("connect", () => {
+        console.log("connect!");
+        console.log("socket连接成功！");
+      });
+      this.socket.on("res", (msg) => {
+        console.log("res from server: %s!", msg);
+      });
+    },
   },
-  mounted(){
-    this.socket = io("ws://localhost:7001/", {
-      reconnectionDelayMax: 10000,
-      query: {
-        auth: "Im"
-      }
-    });
-    this.socket.connect()
-    this.socket.on('connect', () => {
-      console.log('socket连接成功！');
-  
-    });
-    
-    this.socket.on('/v1/im/new-message', message => {
-      console.log(message)
-    });
-    
-  }
-}
+  mounted() {
+    this.initSocket()
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

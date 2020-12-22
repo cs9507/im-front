@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { io } from "socket.io-client";
+import Im from '@/im/im'
 export default {
   name: "Im",
   data() {
@@ -16,20 +16,14 @@ export default {
   },
   methods: {
     sendMessage() {
-      this.socket.emit("chat", 'hello world!');
       this.socket.emit("/", 'hello world!');
     },
     initSocket() {
-      this.socket = io("http://127.0.0.1:7001/", {
+       this.socket = new Im('http://127.0.0.1:7001/').init({
         query: {
           auth: "tokens",
         },
-      });
-      console.log(this.socket)
-      this.socket.on("connect", () => {
-        console.log("connect!");
-        console.log("socket连接成功！");
-      });
+      })
       this.socket.on("res", (msg) => {
         console.log("res from server: %s!", msg);
       });

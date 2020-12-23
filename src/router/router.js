@@ -9,7 +9,14 @@ const routes = [
       name: 'home',
       component: () => import('@/pages/index'),
       meta: {
-        title: '会员中心'
+        title: 'IM'
+      }
+    },{
+      path:'/chat',
+      name: 'chat',
+      component: () => import('@/pages/chat'),
+      meta: {
+        title: 'IM'
       }
     }
   ];

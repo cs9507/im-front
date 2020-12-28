@@ -15,15 +15,11 @@
     <div
       class="message-bottom van-hairline--top-bottom van-tabbar van-tabbar--fixed"
     >
-      <van-field
-        v-model="sms"
-        center
-        autofocus
-        clearable
-        left-icon="smile-o"
-      >
+      <van-field v-model="msg" center autofocus clearable left-icon="smile-o">
         <template #button>
-          <van-button size="small" type="primary">发送</van-button>
+          <van-button size="small" type="primary" @click="handleSendInfo"
+            >发送</van-button
+          >
         </template>
       </van-field>
     </div>
@@ -31,31 +27,52 @@
 </template>
 
 <script>
-import { NavBar, Icon,Field,Button } from "vant";
+import { NavBar, Icon, Field, Button } from "vant";
 export default {
   name: "chat",
   data() {
     return {
       friendName: "",
+      msg: "",
+      socket: null,
+      socketId: "",
+      userId: "",
     };
   },
   created() {
     this.handleDealParams();
+    this.initIm();
   },
   components: {
     [NavBar.name]: NavBar,
     [Icon.name]: Icon,
-    [Field.name]:Field,
-    [Button.name]:Button
+    [Field.name]: Field,
+    [Button.name]: Button,
   },
   methods: {
+    initIm() {
+      this.socketId = this.$socket.id;
+      console.log(this.socketId);
+      this.$socket.on(this.socketId, (msg) => {
+        console.log(msg);
+      });
+    },
     handleLeftBack() {
       this.$router.go(-1);
     },
     handleDealParams() {
-      console.log(this.$route.query);
-      const name = this.$route.query.title;
+      const { name, userId } = this.$route.query;
       this.friendName = name;
+      this.userId = userId;
+    },
+    handleSendInfo() {
+      this.$socket.emit("/", {
+        target: this.socketId,
+        payload: {
+          msg: this.msg,
+          userId: this.userId,
+        },
+      });
     },
   },
 };

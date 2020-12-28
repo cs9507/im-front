@@ -8,7 +8,7 @@
       @click="handleLaunchChat($event,item)"
       v-for="(item, index) in list"
       :key="index"
-      :value="item.value"
+      :value="item.date"
       class="cell-center"
     >
       <template #title>
@@ -18,7 +18,7 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
         <div>
-          <span class="custom-title">{{ item.title }}</span>
+          <span class="custom-title">{{ item.name }}</span>
           <span class="custom-title custom-message">{{ item.message }}</span>
         </div>
       </template>
@@ -33,9 +33,15 @@ export default {
   data() {
     return {
       list: [{
-        title: "单元格",
-        value: "AA", 
-        message: "在不在"
+        name: "单元格1",
+        userId: `client_${Math.random()}`, 
+        message: "在不在",
+        date:'16:09'
+      },{
+        name: "单元格2",
+        userId: `client_${Math.random()}`, 
+        message: "在不在1",
+        date:'16:10'
       }],
       loading: false,
       finished: true,
